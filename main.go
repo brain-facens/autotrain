@@ -30,7 +30,7 @@ func downloadFile(){
 			return
 		}
 	}
-	url := "https://github.com/brain-facens/autotrain/raw/refs/heads/main/autotrain.py"
+	url := "https://raw.githubusercontent.com/brain-facens/autotrain/refs/heads/main/autotrain.py?token=GHSAT0AAAAAACYJWRQ3CYIKL3O4JJT26MKOZYNONMQ"
 	fileName := "scripts/autotrain.py"
 
 	// Verifica se o arquivo já existe
