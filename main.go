@@ -5,9 +5,6 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
-	"net/http"
-	"log"
-	"io"
 
 	"github.com/spf13/cobra"
 )
@@ -20,51 +17,8 @@ func getPythonCommand() string {
 		return "python3" // Para macOS e Linux
 	}
 }
-
-func downloadFile(){
-	scriptsDir := "scripts"
-	if _, err := os.Stat(scriptsDir); os.IsNotExist(err) {
-		err = os.Mkdir(scriptsDir, os.ModePerm)
-		if err != nil {
-			fmt.Printf("Erro ao criar a pasta 'scripts': %s\n", err)
-			return
-		}
-	}
-	url := "https://raw.githubusercontent.com/brain-facens/autotrain/refs/heads/main/autotrain.py?token=GHSAT0AAAAAACYJWRQ3CYIKL3O4JJT26MKOZYNONMQ"
-	fileName := "scripts/autotrain.py"
-
-	// Verifica se o arquivo já existe
-	if _, err := os.Stat(fileName); err == nil {
-		fmt.Printf("File %s already exists. Skipping download.\n", fileName)
-		return
-	} else if !os.IsNotExist(err) {
-		log.Fatal(err) // Outro erro ao verificar a existência do arquivo
-	}
-
-	// Se o arquivo não existir, faz o download
-	resp, err := http.Get(url)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer resp.Body.Close()
-
-	file, err := os.Create(fileName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	_, err = io.Copy(file, resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("File %s downloaded successfully\n", fileName)
-}
-
 func runPythonScript(command string, args []string) {
-	downloadFile()
-	cmd := exec.Command(getPythonCommand(), append([]string{"scripts/autotrain.py", command}, args...)...)
+	cmd := exec.Command(getPythonCommand(), append([]string{"autotrain.py", command}, args...)...)
 
 	// Captura a saída do script Python
 	output, err := cmd.CombinedOutput()

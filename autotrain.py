@@ -181,7 +181,7 @@ if __name__ == "__main__":
     format_parser.add_argument('--input_dir', type=str, help='Image directory')
     format_parser.add_argument('--output_positive_dir', type=str, help='Output positive image directory')
     format_parser.add_argument('--output_negative_dir', type=str, help='Output negative image directory')
-    format_parser.add_argument('--model', type=str, help='Base model for retraining')
+    format_parser.add_argument('--model', type=str, help='Base model')
 
     # Subcomando 'split_dataset'
     split_parser = subparsers.add_parser('split_dataset', help="Command to split the dataset into the COCO format")
