@@ -73,6 +73,7 @@ Or if you're having trouble with a specific command:
 ```bash
 ./autotrain <command> --help
 ```
+</details>
 
 ## TODO
 
