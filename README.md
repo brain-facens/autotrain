@@ -75,6 +75,22 @@ Or if you're having trouble with a specific command:
 ```
 </details>
 
+## Errors
+
+if you try to run it on linux and get the following error
+
+```bash
+./autotrain: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.34` not found (required by ./autotrain)
+./autotrain: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.32` not found (required by ./autotrain)
+``` 
+
+run the libc6 library installation
+
+```bash
+sudo apt update
+sudo apt install libc6
+```
+
 ## TODO
 
 - [] Create an option for the user to input the desired data split division
