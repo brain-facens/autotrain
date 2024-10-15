@@ -93,9 +93,9 @@ sudo apt install libc6
 
 ## TODO
 
-- [] Create an option for the user to input the desired data split division
-- [] Increase the activities that the package supports for automatic retraining
-- [] Expand to more architectures and networks to be retrained, as well as open up for Data Science, NLP, and LLM activities
+- [ x ] Create an option for the user to input the desired data split division
+- [  ] Increase the activities that the package supports for automatic retraining
+- [  ] Expand to more architectures and networks to be retrained, as well as open up for Data Science, NLP, and LLM activities
 
 ## Collaborators
 
