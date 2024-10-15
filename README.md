@@ -81,7 +81,7 @@ Or if you're having trouble with a specific command:
 - [] Increase the activities that the package supports for automatic retraining
 - [] Expand to more architectures and networks to be retrained, as well as open up for Data Science, NLP, and LLM activities
 
-## Colaboradores
+## Collaborators
 
 We would like to thank the following people who contributed to this project:
 
