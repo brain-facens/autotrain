@@ -93,21 +93,23 @@ func main(){
 		},
 	}
 
-	// split dataset into 70% for train and 30% for validation
+	// split dataset into train and validation
 	var splitDatasetCmd = &cobra.Command{
 		Use:   "split_dataset",
-		Short: "Divide o dataset em treino (70%) e validação (30%)",
+		Short: "Split the dataset into train and validation",
 		Run: func(cmd *cobra.Command, args []string) {
 			// Captura os valores das flags
 			outputPositiveDir, _ := cmd.Flags().GetString("output_positive_dir")
 			trainDir, _ := cmd.Flags().GetString("train_dir")
 			valDir, _ := cmd.Flags().GetString("val_dir")
+			trainRatio, _ := cmd.Flags().GetFloat32("train_ratio")
 	
 			// Construa os argumentos para passar para o script Python
 			pythonArgs := []string{
 				"--output_positive_dir", outputPositiveDir,
 				"--train_dir", trainDir,
 				"--val_dir", valDir,
+				"--train_ratio", fmt.Sprintf("%.2f", trainRatio),
 			}
 	
 			// Executa o script Python com os argumentos
@@ -118,7 +120,7 @@ func main(){
 	// train the new model
 	var trainCmd = &cobra.Command{
 		Use:   "train",
-		Short: "Treina o novo modelo",
+		Short: "Train a new model",
 		Run: func(cmd *cobra.Command, args []string) {
 			// Obtenha os valores das flags e passe como argumentos para o script Python
 			model, _ := cmd.Flags().GetString("model")
@@ -160,6 +162,7 @@ func main(){
 	splitDatasetCmd.Flags().String("output_positive_dir", "", "Output positive image directory")
 	splitDatasetCmd.Flags().String("train_dir", "train", "Directory for training images")
 	splitDatasetCmd.Flags().String("val_dir", "val", "Directory for validation images")
+	splitDatasetCmd.Flags().Float32("train_ratio", 0.7, "Ratio to split the dataset into train and validation. Example: 0.7 = 70% to train and 30% to validation")
 
 	formatCmd.AddCommand(segmentationCmd)
 	formatCmd.AddCommand(objectDetectionCmd)

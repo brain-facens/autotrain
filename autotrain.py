@@ -188,6 +188,7 @@ if __name__ == "__main__":
     split_parser.add_argument('--output_positive_dir', type=str, help='Output positive image directory')
     split_parser.add_argument('--train_dir', type=str, help='Directory for training images', default="train")
     split_parser.add_argument('--val_dir', type=str, help='Directory for validation images', default="val")
+    split_parser.add_argument('--train_ratio', type=float, help='Ratio to split the dataset into train and validation. Example: 0.7 = 70% to train and 30% to validation', default=0.7, required=False)
 
     # Subcomando 'train'
     train_parser = subparsers.add_parser('train', help='Command to start the train')
@@ -206,7 +207,7 @@ if __name__ == "__main__":
             format2seg(input_dir=args.input_dir, output_positive_dir=args.output_positive_dir, output_negative_dir=args.output_negative_dir, model=args.model)
     
     elif args.command == 'split_dataset':
-        split_dataset(positive_dir=args.output_positive_dir, train_dir=args.train_dir, val_dir=args.val_dir)
+        split_dataset(positive_dir=args.output_positive_dir, train_dir=args.train_dir, val_dir=args.val_dir, train_ratio=args.train_ratio)
 
     elif args.command == 'train':
         train(model_path=args.model, dataset_yaml=args.dataset_yaml, device=args.device, epochs=args.epochs, imgsz=args.imgsz)
