@@ -6,6 +6,7 @@ import os
 import shutil 
 import random
 import argparse
+import yaml
 
 def format2od(input_dir, output_positive_dir, output_negative_dir, model):
         # Cria os diretórios de saída, se não existirem
@@ -117,7 +118,24 @@ def format2seg(input_dir, output_positive_dir, output_negative_dir, model):
                 cv2.imwrite(output_path, cv2.cvtColor(image, cv2.COLOR_RGB2BGR))  # Converte RGB de volta para BGR para salvar
                 print(f'Saved negative detection: {output_path}')
 
-def split_dataset(positive_dir, train_dir, val_dir, train_ratio=0.7):
+def create_yaml(train_dir: str, val_dir: str, nc: int, names: list):
+    # Configuração do YAML
+    config = {
+        'train': train_dir,
+        'val': val_dir,
+        'nc': nc,
+        'names': names  # Mantém os nomes como uma lista simples
+    }
+
+    yaml_file = 'config.yaml'
+
+    # Criação do arquivo YAML
+    with open(yaml_file, 'w') as file:
+        yaml.dump(config, file, default_flow_style=False)  # Usando estilo padrão para melhor legibilidade
+
+    print('YAML file created successfully!')
+
+def split_dataset(positive_dir: str, train_dir: str, val_dir: str, nc: int, train_ratio: float = 0.7, names: list = [""]):
         # Cria os diretórios de treino e validação, se não existirem
         os.makedirs(train_dir, exist_ok=True)
         os.makedirs(val_dir, exist_ok=True)
@@ -163,6 +181,7 @@ def split_dataset(positive_dir, train_dir, val_dir, train_ratio=0.7):
                 dst_txt_path = os.path.join(val_dir, txt_filename)
                 shutil.move(src_txt_path, dst_txt_path)
 
+        create_yaml(train_dir=train_dir, val_dir=val_dir, nc=nc, names=names)
         print(f"Moved {len(train_images)} images to '{train_dir}' and {len(val_images)} images to '{val_dir}'.")
     
 def train(model_path: str, dataset_yaml: str, device: str = 'cuda', epochs: int = 100, imgsz: int = 640):
@@ -189,6 +208,8 @@ if __name__ == "__main__":
     split_parser.add_argument('--train_dir', type=str, help='Directory for training images', default="train")
     split_parser.add_argument('--val_dir', type=str, help='Directory for validation images', default="val")
     split_parser.add_argument('--train_ratio', type=float, help='Ratio to split the dataset into train and validation. Example: 0.7 = 70% to train and 30% to validation', default=0.7, required=False)
+    split_parser.add_argument('--nc', type=int, help='Number of classes', default=0, required=False)
+    split_parser.add_argument('--names', type=list, help='Comma-separated list of class names', default=[""], nargs='+', required=False)
 
     # Subcomando 'train'
     train_parser = subparsers.add_parser('train', help='Command to start the train')
@@ -207,7 +228,7 @@ if __name__ == "__main__":
             format2seg(input_dir=args.input_dir, output_positive_dir=args.output_positive_dir, output_negative_dir=args.output_negative_dir, model=args.model)
     
     elif args.command == 'split_dataset':
-        split_dataset(positive_dir=args.output_positive_dir, train_dir=args.train_dir, val_dir=args.val_dir, train_ratio=args.train_ratio)
+        split_dataset(positive_dir=args.output_positive_dir, train_dir=args.train_dir, val_dir=args.val_dir, train_ratio=args.train_ratio, nc=args.nc, names=args.names)
 
     elif args.command == 'train':
         train(model_path=args.model, dataset_yaml=args.dataset_yaml, device=args.device, epochs=args.epochs, imgsz=args.imgsz)

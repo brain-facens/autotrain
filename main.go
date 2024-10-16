@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -103,6 +104,8 @@ func main(){
 			trainDir, _ := cmd.Flags().GetString("train_dir")
 			valDir, _ := cmd.Flags().GetString("val_dir")
 			trainRatio, _ := cmd.Flags().GetFloat32("train_ratio")
+			nc, _ := cmd.Flags().GetInt("nc")
+			names, _ := cmd.Flags().GetString("names")
 	
 			// Construa os argumentos para passar para o script Python
 			pythonArgs := []string{
@@ -110,6 +113,13 @@ func main(){
 				"--train_dir", trainDir,
 				"--val_dir", valDir,
 				"--train_ratio", fmt.Sprintf("%.2f", trainRatio),
+				"--nc", fmt.Sprintf("%d", nc),
+			}
+			nameList := strings.Split(names, ",")
+			for _, name := range nameList {
+				if name != "" { 
+					pythonArgs = append(pythonArgs, "--names", name)
+				}
 			}
 	
 			// Executa o script Python com os argumentos
@@ -163,6 +173,8 @@ func main(){
 	splitDatasetCmd.Flags().String("train_dir", "train", "Directory for training images")
 	splitDatasetCmd.Flags().String("val_dir", "val", "Directory for validation images")
 	splitDatasetCmd.Flags().Float32("train_ratio", 0.7, "Ratio to split the dataset into train and validation. Example: 0.7 = 70% to train and 30% to validation")
+	splitDatasetCmd.Flags().Int("nc", 0, "Number of classes")
+	splitDatasetCmd.Flags().String("names", "", "Comma-separated list of class names")
 
 	formatCmd.AddCommand(segmentationCmd)
 	formatCmd.AddCommand(objectDetectionCmd)
